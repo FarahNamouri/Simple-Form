@@ -11,16 +11,52 @@ import { useMultistepForm } from "./useMultistepForm";
 import { UserForm } from "./UserForm";
 import { AdressForm } from "./AdressForm";
 import { AccountForm } from "./AccountForm";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
+
+type FormData = {
+  firstname: string
+  lastname: string
+  age: string
+  street: string
+  city: string
+  state: string
+  zip: string
+  email: string
+  password: string
+}
+
+const INITIAL_DATA: FormData = {
+  firstname: "",
+  lastname: "",
+  age: "",
+  street: "",
+  city: "",
+  state: "",
+  zip: "",
+  email: "",
+  password: "",
+}
 
 function App() {
+ 
+  const [data, setData] = useState(INITIAL_DATA)
+  function updateFields(fields: Partial<FormData>) {
+    setData(prev => {
+      return {...prev, ...fields}
+    })
+  }
   const { steps, currentStepIndex, step, isFirstStep, back, next, isLastStep } =
-    useMultistepForm([<UserForm />, <AdressForm />, <AccountForm />]);
+    useMultistepForm([
+      <UserForm {...data} updateFields={updateFields} />,
+      <AdressForm {...data} updateFields={updateFields}/>, 
+      <AccountForm {...data} updateFields={updateFields}/>]);
 
     function onSubmit(e: FormEvent) {
       e.preventDefault()
-      next()
+      if (!isLastStep) return next()
+      alert("Successful account creation")
     }
+
   return (
     <div>
       <Center>

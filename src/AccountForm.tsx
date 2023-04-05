@@ -7,9 +7,20 @@ import {
     Center,
     Stack,
   } from "@chakra-ui/react";
-  import { useMultistepForm } from "./useMultistepForm";
+import { useMultistepForm } from "./useMultistepForm";
 import { FormWrapper } from "./FormWrapper";
-export function AccountForm() {
+
+type AccountData = {
+  email: string
+  password: string
+}
+
+type AccountFormProps = AccountData & {
+  updateFields: (fields: Partial<AccountData>) => void
+}
+
+
+export function AccountForm({ email, password, updateFields}: AccountFormProps) {
     const { steps, currentStepIndex, step, isFirstStep, back, next, isLastStep } =
     useMultistepForm([<div>One</div>, <div>Two</div>]);
     return (
@@ -17,11 +28,20 @@ export function AccountForm() {
         <FormWrapper title="Account Creation">
           <FormControl>
             <FormLabel>Email</FormLabel>
-            <Input autoFocus required type="text" />
+            <Input 
+            autoFocus 
+            required 
+            type="text" 
+            value={email}
+            onChange={e => updateFields({email: e.target.value})}
+            />
             <FormLabel>Password</FormLabel>
-            <Input required type="text" />
-            <FormLabel>Age</FormLabel>
-            <Input type="number" />
+            <Input 
+            required 
+            type="text" 
+            value={password}
+            onChange={e => updateFields({password: e.target.value})}
+            />
           </FormControl>
           </FormWrapper>
         </>
